@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fingerprint Appointments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+    <link
+      rel="stylesheet"
+      href="styles.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
+  </head>
+
+  <body>
+    <button id="save-button">Save Changes</button>
+    <h1>Fingerprint Appointments</h1>
+    <div id="calendar-container">
+        <button id="calendar-button" aria-label="Open calendar">
+            <i class="fa-regular fa-calendar"></i>
+        </button>
+        <input type="text" id="datepicker" style="display: none;">
+    </div>
+    <div id="month-schedule" class="month-schedule"></div>
+
+    <script src="script.js"></script>
+
+  </body>
+</html>

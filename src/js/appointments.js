@@ -92,24 +92,46 @@ const handleAppointmentClick = (e) => {
 };
 
 const saveChanges = async (appointmentRow) => {
-    const date = appointmentRow.closest('.day-schedule').querySelector('h2').textContent.split(' - ')[1];
-    const time = appointmentRow.querySelector('.time-text').textContent;
+    const date = appointmentRow.dataset.date;
+    const time = appointmentRow.dataset.time;
     const name = appointmentRow.querySelector('input[name="name"]').value;
     const phone = appointmentRow.querySelector('input[name="phone"]').value;
-    const completed = appointmentRow.querySelector('input[onclick="markComplete(event)"]').checked;
-    const fingerprintCardOnly = appointmentRow.querySelector('input[name="fingerprint_card_only"]').checked;
+    const completed = appointmentRow.querySelector('.completed-checkbox').checked;
 
     const updatedAppointment = {
-        date: formatDateForComparison(date),
-        time: standardizeTimeFormat(time),
-        name,
-        phone,
+        date: date,
+        time: time,
+        name: name,
+        phone: phone,
         completed: completed ? 1 : 0,
-        fingerprint_card_only: fingerprintCardOnly ? 1 : 0
+        fingerprint_card_only: 0  // We're not handling this for now, as per your earlier comment
     };
 
-    await saveAppointment(updatedAppointment);
-    exitEditMode();
+    try {
+        const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedAppointment),
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || "Failed to save appointment");
+        
+        alert(data.message);  // Show success message
+        
+        // Update the UI to reflect the changes
+        appointmentRow.querySelector('input[name="name"]').value = name;
+        appointmentRow.querySelector('input[name="phone"]').value = phone;
+        appointmentRow.querySelector('.completed-checkbox').checked = completed;
+        appointmentRow.classList.toggle('complete', completed);
+
+        exitEditMode();
+    } catch (error) {
+        console.error("Error saving appointment:", error);
+        alert("Failed to save appointment. Please try again.");
+    }
 };
 
 const markComplete = (event) => {

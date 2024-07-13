@@ -40,12 +40,12 @@ function createDaySchedule(day, date) {
                     </div>
                 </td>
                 <td class="status">
-                    <input type="checkbox" class="checkbox completed-checkbox" ${completed ? 'checked' : ''} disabled>
+                    <input type="checkbox" class="checkbox completed-checkbox" ${completed ? 'checked' : ''} onclick="return false;">
                 </td>
                 <td class="actions">
-                    <button class="save-btn" title="Confirm"><i class="fas fa-check"></i></button>
-                    <button class="cancel-btn" title="Cancel"><i class="fas fa-times"></i></button>
-                    <button class="delete-btn" title="Delete Appointment"><i class="fas fa-trash-alt"></i></button>
+                    <button class="save-btn" title="Confirm" style="display:none;"><i class="fas fa-check"></i></button>
+                    <button class="cancel-btn" title="Cancel" style="display:none;"><i class="fas fa-times"></i></button>
+                    <button class="delete-btn" title="Delete Appointment" style="display:none;"><i class="fas fa-trash-alt"></i></button>
                 </td>
             </tr>
         `;

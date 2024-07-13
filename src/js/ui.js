@@ -23,7 +23,7 @@ function createDaySchedule(day, date) {
     `;
 
     slots.forEach((slot, index) => {
-        const appointment = appointmentData.find(a => a.date === formattedDateString && a.time === slot);
+        const appointment = appointmentData.find(a => a.date === formattedDateString && a.time === standardizeTimeFormat(slot));
         const name = appointment ? appointment.name : '';
         const phone = appointment ? appointment.phone : '';
         const completed = appointment ? appointment.completed : false;

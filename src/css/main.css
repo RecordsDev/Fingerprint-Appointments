@@ -1,0 +1,18 @@
+@import 'layout.css';
+@import 'calendar.css';
+@import 'appointments.css';
+@import 'buttons.css';
+
+body {
+    font-family: Raleway, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}

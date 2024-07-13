@@ -1,0 +1,30 @@
+#calendar-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pika-single {
+    z-index: 9999;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#calendar-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #3498db;
+    cursor: pointer;
+    padding: 10px;
+}
+
+#calendar-button:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+#calendar-button:focus {
+    outline: 2px solid #3498db;
+}

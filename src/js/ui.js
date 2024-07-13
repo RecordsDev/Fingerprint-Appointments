@@ -7,7 +7,7 @@ function createDaySchedule(day, date) {
     <div class="day-schedule ${isReserved ? 'reserved' : ''}" id="day-${dateString.replace(/\//g, "-")}-${day}">
         <h2>${day} - ${dateString}</h2>
         <label class="reserve-checkbox">
-            <input type="checkbox" onchange="toggleReserve('${dateString}')" ${isReserved ? 'checked' : ''}>
+            <input type="checkbox" class="checkbox" onchange="toggleReserve('${dateString}')" ${isReserved ? 'checked' : ''}>
             Reserve
         </label>
         <table class="schedule">
@@ -15,7 +15,7 @@ function createDaySchedule(day, date) {
                 <tr>
                     <th class="time-column">Time</th>
                     <th class="name-phone-column">Name/Phone</th>
-                    <th>Status</th>
+                    <th>Completed</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@ function createDaySchedule(day, date) {
                     </div>
                 </td>
                 <td class="status">
-                    <input type="checkbox" class="completed-checkbox" ${completed ? 'checked' : ''} disabled>
+                    <input type="checkbox" class="checkbox completed-checkbox" ${completed ? 'checked' : ''} disabled>
                 </td>
                 <td class="actions">
                     <button class="save-btn" title="Confirm"><i class="fas fa-check"></i></button>

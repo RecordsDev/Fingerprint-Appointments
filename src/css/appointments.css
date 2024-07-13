@@ -84,9 +84,14 @@
 }
 
 .checkbox {
-    transform: scale(1.5);
+    transform: scale(2);
     margin: 0;
     padding: 0;
+}
+
+.completed-checkbox {
+    margin-left: 50%;
+    margin-right: 50%;
 }
 
 /* Action Button Styles */
@@ -129,7 +134,6 @@
 }
 
 .reserve-checkbox input {
-    transform: scale(1.5);
     margin-right: 10px;
 }
 

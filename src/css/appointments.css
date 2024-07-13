@@ -1,51 +1,62 @@
+/* Appointment Row Styles */
 .appointment-row {
     position: relative;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
+.schedule tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.appointment-row:hover {
+    background-color: #e0e0e0 !important;
+}
+
+.appointment-row.editing {
+    background-color: #e6f2ff !important;
+}
+
+.appointment-row.complete {
+    background-color: #d4edda !important;
+}
+
+/* Time Slot Styles */
 .time-column {
     width: 120px;
 }
 
-.name-phone-column {
-    width: 60%;
-}
-
 .time-slot {
-    position: relative;
     text-align: center;
-    height: 70px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
     padding-top: 10px;
 }
 
 .time-text {
     font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 5px;
+}
+
+/* Name/Phone Column Styles */
+.name-phone-column {
+    width: 60%;
 }
 
 .slot {
     position: relative;
-    min-height: 60px;
 }
 
 .slot .appointment {
-    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .slot .appointment input {
-    width: calc(78% - 5px);
+    width: calc(100% - 10px);
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 5px;
     font-size: 14px;
-    box-sizing: border-box;
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
@@ -55,33 +66,54 @@
     outline: none;
 }
 
-.complete {
-    background-color: #d4edda !important;
+.appointment-row.editing .slot .appointment input {
+    border-color: #007bff;
+    background-color: #ffffff;
 }
 
-.complete .appointment input {
+.appointment-row.complete .slot .appointment input {
     background-color: #e9ecef;
     cursor: not-allowed;
 }
 
+/* Status Styles */
 .checkbox-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    text-align: center;
 }
 
 .checkbox {
-    transform: scale(2);
+    transform: scale(1.5);
     margin: 0;
     padding: 0;
 }
 
-.complete .checkbox[name="fingerprint_card_only"] {
-    cursor: not-allowed;
+/* Action Button Styles */
+.actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 0 5px;
+    padding: 5px;
+    transition: transform 0.2s ease;
+    display: none;
 }
 
+.appointment-row.editing .actions button {
+    display: inline-block;
+}
+
+.actions button:hover {
+    transform: scale(1.2);
+}
+
+.save-btn { color: #28a745; }
+.cancel-btn { color: #dc3545; }
+.delete-btn { color: #6c757d; }
+
+/* Reserve Checkbox Styles */
 .reserve-checkbox {
     position: absolute;
     top: 10px;
@@ -97,10 +129,11 @@
 }
 
 .reserve-checkbox input {
-    transform: scale(2);
+    transform: scale(1.5);
     margin-right: 10px;
 }
 
+/* Reserved Day Styles */
 .reserved {
     position: relative;
 }
@@ -122,12 +155,17 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.appointment-row.editing {
-    background-color: #e6f2ff;
+/* Tooltip Styles */
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
 }
-
-.appointment-row.editing input[type="text"] {
-    background-color: #ffffff;
-    border: 1px solid #007bff;
-}
-

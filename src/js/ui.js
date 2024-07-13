@@ -15,8 +15,8 @@ function createDaySchedule(day, date) {
                 <tr>
                     <th class="time-column">Time</th>
                     <th class="name-phone-column">Name/Phone</th>
-                    <th>Completed</th>
-                    <th>Fingerprint Card Only</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,16 +27,11 @@ function createDaySchedule(day, date) {
         const name = appointment ? appointment.name : '';
         const phone = appointment ? appointment.phone : '';
         const completed = appointment ? appointment.completed : false;
-        const fingerprintCardOnly = appointment ? appointment.fingerprintCardOnly : false;
 
         daySchedule += `
-            <tr class="appointment-row">
+            <tr class="appointment-row ${completed ? 'complete' : ''}" data-time="${slot}" data-date="${formattedDateString}">
                 <td class="time-slot">
                     <span class="time-text">${slot}</span>
-                    <button class="manage-appointment">
-                        <span>Manage</span>
-                        <span>Appointment</span>
-                    </button>
                 </td>
                 <td class="slot">
                     <div class="appointment" data-slot-index="${index}">
@@ -44,16 +39,13 @@ function createDaySchedule(day, date) {
                         <input type="text" name="phone" placeholder="Phone Number" value="${phone}" readonly>
                     </div>
                 </td>
-                <td>
-                    <div class="checkbox-container">
-                        <input type="checkbox" class="checkbox" onclick="markComplete(event)" ${completed ? 'checked' : ''} disabled>
-                    </div>
+                <td class="status">
+                    <input type="checkbox" class="completed-checkbox" ${completed ? 'checked' : ''} disabled>
                 </td>
-                <td>
-                    <div class="checkbox-container">
-                        <input type="checkbox" class="checkbox" name="fingerprint_card_only" onclick="toggleFingerprintCardOnly(event)" 
-                            ${fingerprintCardOnly ? 'checked' : ''} ${completed ? 'disabled' : ''} disabled>
-                    </div>
+                <td class="actions">
+                    <button class="save-btn" title="Confirm"><i class="fas fa-check"></i></button>
+                    <button class="cancel-btn" title="Cancel"><i class="fas fa-times"></i></button>
+                    <button class="delete-btn" title="Delete Appointment"><i class="fas fa-trash-alt"></i></button>
                 </td>
             </tr>
         `;

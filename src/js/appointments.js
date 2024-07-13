@@ -53,16 +53,9 @@ const enterEditMode = (appointmentRow) => {
     currentlyEditingAppointment = appointmentRow;
     
     appointmentRow.querySelectorAll('input[type="text"]').forEach(input => input.removeAttribute('readonly'));
-    appointmentRow.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.disabled = false);
+    appointmentRow.querySelector('.completed-checkbox').disabled = false;
 
-    const manageButton = appointmentRow.querySelector('.manage-appointment');
-    manageButton.innerHTML = '<span>Save</span><span>Changes</span>';
-    
-    const cancelButton = document.createElement('button');
-    cancelButton.className = 'cancel-edit';
-    cancelButton.innerHTML = 'Cancel';
-    cancelButton.onclick = exitEditMode;
-    appointmentRow.querySelector('.slot').appendChild(cancelButton);
+    appointmentRow.querySelectorAll('.actions button').forEach(button => button.style.display = 'inline-block');
 
     appointmentRow.classList.add('editing');
 };
@@ -71,13 +64,9 @@ const exitEditMode = () => {
     if (!currentlyEditingAppointment) return;
 
     currentlyEditingAppointment.querySelectorAll('input[type="text"]').forEach(input => input.setAttribute('readonly', true));
-    currentlyEditingAppointment.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.disabled = true);
+    currentlyEditingAppointment.querySelector('.completed-checkbox').disabled = true;
 
-    const manageButton = currentlyEditingAppointment.querySelector('.manage-appointment');
-    manageButton.innerHTML = '<span>Manage</span><span>Appointment</span>';
-
-    const cancelButton = currentlyEditingAppointment.querySelector('.cancel-edit');
-    if (cancelButton) cancelButton.remove();
+    currentlyEditingAppointment.querySelectorAll('.actions button').forEach(button => button.style.display = 'none');
 
     currentlyEditingAppointment.classList.remove('editing');
     currentlyEditingAppointment = null;
@@ -87,14 +76,18 @@ const handleAppointmentClick = (e) => {
     const appointmentRow = e.target.closest('.appointment-row');
     if (!appointmentRow) return;
 
-    if (e.target.closest('.manage-appointment')) {
-        if (currentlyEditingAppointment === appointmentRow) {
+    if (appointmentRow.classList.contains('editing')) {
+        if (e.target.closest('.save-btn')) {
             saveChanges(appointmentRow);
-        } else {
-            enterEditMode(appointmentRow);
+        } else if (e.target.closest('.cancel-btn')) {
+            exitEditMode();
+        } else if (e.target.closest('.delete-btn')) {
+            if (confirm('Are you sure you want to delete this appointment?')) {
+                deleteAppointment(appointmentRow);
+            }
         }
-    } else if (e.target.closest('.cancel-edit')) {
-        exitEditMode();
+    } else {
+        enterEditMode(appointmentRow);
     }
 };
 

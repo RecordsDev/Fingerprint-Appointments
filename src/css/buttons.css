@@ -46,14 +46,39 @@
     display: flex;
 }
 
+.appointment-row.editing .manage-appointment {
+    display: flex;
+    background-color: #28a745;
+}
+
 .manage-appointment:hover {
     background-color: #0056b3;
 }
 
-.appointment-row.editing .manage-appointment {
-    background-color: #28a745;
-}
-
 .appointment-row.editing .manage-appointment:hover {
     background-color: #218838;
+}
+
+.cancel-edit {
+    display: none;
+    width: auto;
+    min-width: 60px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-edit:hover {
+    background-color: #c82333;
+}
+
+.appointment-row.editing .cancel-edit {
+    display: inline-block;
 }

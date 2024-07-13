@@ -1,9 +1,9 @@
 <?php
 // Database configuration
-define('DB_HOST', 'fdb1029.awardspace.net');
-define('DB_NAME', '4504421_fingerprintappointments');
-define('DB_USER', '4504421_fingerprintappointments');
-define('DB_PASS', 'po*mjd5,0prA:hx1');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'id22417332_towlog');
+define('DB_USER', 'id22417332_towlogadmin');
+define('DB_PASS', 'K%7zgK7KaP8M|]}0');
 
 // Error reporting for debugging (remove in production)
 ini_set('display_errors', 1);

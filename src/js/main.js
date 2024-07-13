@@ -19,7 +19,7 @@ function initializeApp() {
     });
 
     // Add event listener to the save button
-    document.getElementById("save-button").addEventListener("click", saveAppointments);
+    document.getElementById("save-button").addEventListener("click", saveAppointment);
 
     // Set up interval for date change check
     setInterval(checkDateChange, 3600000);

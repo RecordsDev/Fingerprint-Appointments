@@ -1,174 +1,131 @@
 // Global variable to track the currently editing appointment
 let currentlyEditingAppointment = null;
 
-function fetchAppointmentData() {
-    return fetch("http://fpas.atwebpages.com/get_appointments.php")
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then((text) => {
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                console.error("Server response was not valid JSON:", text);
-                throw new Error("The server response was not valid JSON");
-            }
-        })
-        .then((data) => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            appointmentData = data.map((appointment) => ({
-                date: appointment.date,
-                time: standardizeTimeFormat(appointment.time),
-                name: appointment.name,
-                phone: appointment.phone,
-                completed: appointment.completed === "1",
-                fingerprintCardOnly: appointment.fingerprint_card_only === "1",
-            }));
-            console.log("Fetched appointment data:", appointmentData);
-            return appointmentData;
-        })
-        .catch((error) => {
-            console.error("Error fetching appointment data:", error);
-            showError("Failed to fetch appointment data: " + error.message);
-            return [];
-        });
-}
-
-function saveAppointments() {
-    const appointments = [];
-    const daySchedules = document.querySelectorAll(".day-schedule");
-
-    daySchedules.forEach((daySchedule) => {
-        const date = daySchedule.querySelector("h2").textContent.split(" - ")[1];
-        const rows = daySchedule.querySelectorAll("tbody tr");
-
-        rows.forEach((row) => {
-            const time = row.querySelector(".time-slot").textContent;
-            const nameInput = row.querySelector('input[placeholder="Name"]');
-            const phoneInput = row.querySelector('input[placeholder="Phone Number"]');
-            const completedCheckbox = row.querySelector('input[onclick="markComplete(event)"]');
-            const fingerprintCardOnlyCheckbox = row.querySelector('input[name="fingerprint_card_only"]');
-
-            appointments.push({
-                date: date,
-                time: time,
-                name: nameInput.value,
-                phone: phoneInput.value,
-                completed: completedCheckbox.checked ? 1 : 0,
-                fingerprint_card_only: fingerprintCardOnlyCheckbox.checked ? 1 : 0,
-            });
-        });
-    });
-
-    fetch("http://fpas.atwebpages.com/save_appointments.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(appointments),
-    })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then((data) => {
-        if (data.success) {
-            alert("Appointments saved successfully!");
-        } else {
-            console.error("Server responded with an error:", data.error);
-            throw new Error(data.error || "Failed to save appointments");
-        }
-    })
-    .catch((error) => {
-        console.error("Error saving appointments:", error);
-        console.error("Error details:", error.stack);
-        alert("Failed to save appointments. Please check the console for more details.");
-    });
-}
-
-function enterEditMode(appointmentRow) {
-    if (currentlyEditingAppointment) {
-        exitEditMode();
+const fetchAppointmentData = async () => {
+    try {
+        const response = await fetch("https://towlog.000webhostapp.com/appointments/get_appointments.php");
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+        
+        appointmentData = data.map(appointment => ({
+            date: appointment.date,
+            time: standardizeTimeFormat(appointment.time),
+            name: appointment.name,
+            phone: appointment.phone,
+            completed: appointment.completed === "1",
+            fingerprintCardOnly: appointment.fingerprint_card_only === "1",
+        }));
+        
+        console.log("Fetched appointment data:", appointmentData);
+        return appointmentData;
+    } catch (error) {
+        console.error("Error fetching appointment data:", error);
+        showError("Failed to fetch appointment data: " + error.message);
+        return [];
     }
+};
+
+const saveAppointment = async (appointmentData) => {
+    try {
+        const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(appointmentData),
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || "Failed to save appointment");
+        
+        alert("Appointment saved successfully!");
+    } catch (error) {
+        console.error("Error saving appointment:", error);
+        alert("Failed to save appointment. Please check the console for more details.");
+    }
+};
+
+const enterEditMode = (appointmentRow) => {
+    if (currentlyEditingAppointment) exitEditMode();
 
     currentlyEditingAppointment = appointmentRow;
     
-    appointmentRow.querySelectorAll('input[type="text"]').forEach(input => {
-        input.removeAttribute('readonly');
-    });
+    appointmentRow.querySelectorAll('input[type="text"]').forEach(input => input.removeAttribute('readonly'));
+    appointmentRow.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.disabled = false);
 
-    appointmentRow.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.disabled = false;
-    });
-
-    const button = appointmentRow.querySelector('.manage-appointment');
-    button.innerHTML = '<span>Save</span><span>Changes</span>';
+    const manageButton = appointmentRow.querySelector('.manage-appointment');
+    manageButton.innerHTML = '<span>Save</span><span>Changes</span>';
+    
+    const cancelButton = document.createElement('button');
+    cancelButton.className = 'cancel-edit';
+    cancelButton.innerHTML = 'Cancel';
+    cancelButton.onclick = exitEditMode;
+    appointmentRow.querySelector('.slot').appendChild(cancelButton);
 
     appointmentRow.classList.add('editing');
-}
+};
 
-function exitEditMode() {
+const exitEditMode = () => {
     if (!currentlyEditingAppointment) return;
 
-    currentlyEditingAppointment.querySelectorAll('input[type="text"]').forEach(input => {
-        input.setAttribute('readonly', true);
-    });
+    currentlyEditingAppointment.querySelectorAll('input[type="text"]').forEach(input => input.setAttribute('readonly', true));
+    currentlyEditingAppointment.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.disabled = true);
 
-    currentlyEditingAppointment.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.disabled = true;
-    });
+    const manageButton = currentlyEditingAppointment.querySelector('.manage-appointment');
+    manageButton.innerHTML = '<span>Manage</span><span>Appointment</span>';
 
-    const button = currentlyEditingAppointment.querySelector('.manage-appointment');
-    button.innerHTML = '<span>Manage</span><span>Appointment</span>';
+    const cancelButton = currentlyEditingAppointment.querySelector('.cancel-edit');
+    if (cancelButton) cancelButton.remove();
 
     currentlyEditingAppointment.classList.remove('editing');
-
     currentlyEditingAppointment = null;
-}
+};
 
-function saveAppointment(appointmentRow) {
-    console.log('Saving appointment:', appointmentRow);
-    // TODO: Implement actual saving logic
-}
+const handleAppointmentClick = (e) => {
+    const appointmentRow = e.target.closest('.appointment-row');
+    if (!appointmentRow) return;
 
-// Event listener for manage appointment buttons
-document.addEventListener('click', function(e) {
-    if (e.target && e.target.closest('.manage-appointment')) {
-        const appointmentRow = e.target.closest('.appointment-row');
-        
+    if (e.target.closest('.manage-appointment')) {
         if (currentlyEditingAppointment === appointmentRow) {
-            saveAppointment(appointmentRow);
-            exitEditMode();
+            saveChanges(appointmentRow);
         } else {
             enterEditMode(appointmentRow);
         }
-    } else if (currentlyEditingAppointment && !e.target.closest('.appointment-row')) {
+    } else if (e.target.closest('.cancel-edit')) {
         exitEditMode();
     }
-});
+};
 
-function markComplete(event) {
+const saveChanges = async (appointmentRow) => {
+    const date = appointmentRow.closest('.day-schedule').querySelector('h2').textContent.split(' - ')[1];
+    const time = appointmentRow.querySelector('.time-text').textContent;
+    const name = appointmentRow.querySelector('input[name="name"]').value;
+    const phone = appointmentRow.querySelector('input[name="phone"]').value;
+    const completed = appointmentRow.querySelector('input[onclick="markComplete(event)"]').checked;
+    const fingerprintCardOnly = appointmentRow.querySelector('input[name="fingerprint_card_only"]').checked;
+
+    const updatedAppointment = {
+        date: formatDateForComparison(date),
+        time: standardizeTimeFormat(time),
+        name,
+        phone,
+        completed: completed ? 1 : 0,
+        fingerprint_card_only: fingerprintCardOnly ? 1 : 0
+    };
+
+    await saveAppointment(updatedAppointment);
+    exitEditMode();
+};
+
+const markComplete = (event) => {
     const row = event.target.closest("tr");
     const isCompleted = event.target.checked;
     row.classList.toggle("complete", isCompleted);
-    const inputs = row.querySelectorAll('input[type="text"]');
-    inputs.forEach((input) => {
-        input.readOnly = isCompleted;
-    });
+    row.querySelectorAll('input[type="text"]').forEach(input => input.readOnly = isCompleted);
+    row.querySelector('input[name="fingerprint_card_only"]').disabled = isCompleted;
+};
 
-    const fingerprintCardOnlyCheckbox = row.querySelector(
-        'input[name="fingerprint_card_only"]'
-    );
-    fingerprintCardOnlyCheckbox.disabled = isCompleted;
-}
-
-function toggleFingerprintCardOnly(event) {
-    // This function can remain empty or you can add any additional logic here
-}
+// Event listener for appointment interactions
+document.addEventListener('click', handleAppointmentClick);

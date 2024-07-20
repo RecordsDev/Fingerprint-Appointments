@@ -3,7 +3,8 @@ let currentlyEditingAppointment = null;
 
 const fetchAppointmentData = async () => {
     try {
-        const response = await fetch("https://towlog.000webhostapp.com/appointments/get_appointments.php");
+        // const response = await fetch("https://towlog.000webhostapp.com/appointments/get_appointments.php");
+        const response = await fetch("http://localhost/FingerprintAppointments/src/php/get_appointments.php");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
@@ -29,7 +30,8 @@ const fetchAppointmentData = async () => {
 
 const saveAppointment = async (appointmentData) => {
     try {
-        const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+        // const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+        const response = await fetch("http://localhost/FingerprintAppointments/src/php/save_appointments.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(appointmentData),
@@ -108,7 +110,8 @@ const saveChanges = async (appointmentRow) => {
     };
 
     try {
-        const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+        // const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
+        const response = await fetch("http://localhost/FingerprintAppointments/src/php/save_appointments.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedAppointment),

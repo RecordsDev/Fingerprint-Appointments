@@ -1,9 +1,9 @@
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'id22417332_towlog');
-define('DB_USER', 'id22417332_towlogadmin');
-define('DB_PASS', 'K%7zgK7KaP8M|]}0');
+define('DB_NAME', 'fingerprintappointments');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
 // Error reporting for debugging (remove in production)
 ini_set('display_errors', 1);

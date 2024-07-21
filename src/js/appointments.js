@@ -95,7 +95,7 @@ const handleAppointmentClick = (e) => {
 
 const saveChanges = async (appointmentRow) => {
     const date = appointmentRow.dataset.date;
-    const time = appointmentRow.dataset.time;
+    const time = standardizeTimeFormat(appointmentRow.dataset.time);
     const name = appointmentRow.querySelector('input[name="name"]').value;
     const phone = appointmentRow.querySelector('input[name="phone"]').value;
     const completed = appointmentRow.querySelector('.completed-checkbox').checked;
@@ -110,7 +110,6 @@ const saveChanges = async (appointmentRow) => {
     };
 
     try {
-        // const response = await fetch("https://towlog.000webhostapp.com/appointments/save_appointments.php", {
         const response = await fetch("http://localhost/FingerprintAppointments/src/php/save_appointments.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -122,6 +121,8 @@ const saveChanges = async (appointmentRow) => {
         const data = await response.json();
         if (!data.success) throw new Error(data.error || "Failed to save appointment");
         
+        console.log("Successfully sent:");
+        console.log(updatedAppointment);
         alert(data.message);  // Show success message
         
         // Update the UI to reflect the changes
